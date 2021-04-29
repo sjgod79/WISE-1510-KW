@@ -13,3 +13,4 @@ Please follow the below steps to deploy our SDK:
 ## Compilation
 
 `./make.sh`
+"# WISE-1510-KW" 

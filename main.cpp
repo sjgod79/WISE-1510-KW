@@ -275,7 +275,8 @@ float MGRead(void)
         // delay(READ_SAMPLE_INTERVAL);
         Thread::wait(1000);        
     }
-    v = (v/READ_SAMPLE_TIMES) *5/1024 ;    
+    //v = (v/READ_SAMPLE_TIMES) *5/1024 ;   
+    v = (v/READ_SAMPLE_TIMES) *5 ;    
     return v;
 }
 
@@ -325,7 +326,7 @@ static void node_sensor_sku_thread(void const *args)
 {
     while(1){
         Thread::wait(1000);
-        NODE_DEBUG("\n LoRa CO2 Sensor \r :  ");
+        NODE_DEBUG("\n LoRa CO2 Sensor :  \r");
         co2_sensor_value = co2_sensor_sku_sen0159(); 
     }
 }
@@ -710,8 +711,8 @@ void node_state_loop()
                 {
                     time_t seconds = time(NULL);
             
-                    NODE_DEBUG("Time as seconds since January 1, 1970 = %d\n", seconds);
-                    NODE_DEBUG("Time as a basic string = %s", ctime(&seconds));
+                    NODE_DEBUG("Time as seconds since January 1, 1970 = %d\r\n", seconds);
+                    NODE_DEBUG("Time as a basic string = %s\r\n", ctime(&seconds));
                     
                 }
      

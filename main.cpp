@@ -272,9 +272,9 @@ float MGRead(void)
 
     for (i=0;i<READ_SAMPLE_TIMES;i++) {
         v += ain;
-        delay(READ_SAMPLE_INTERVAL);
+        //delay(READ_SAMPLE_INTERVAL);
         NODE_DEBUG(" V: %f\r\n",v);
-        //Thread::wait(1000);        
+        Thread::wait(50);        
     }
     v = (v/READ_SAMPLE_TIMES) *5/1024 ;  
     NODE_DEBUG( "V:  %f\r\n",v); 

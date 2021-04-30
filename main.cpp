@@ -599,7 +599,7 @@ unsigned char node_get_sensor_data (char *data)
     len++; // CO2
     sensor_data[len+2]=0x3;
     len++;  // len:2 bytes  
-    sensor_data[len+2]=(co2_sensor_value>>16)&0xff;
+    sensor_data[len+2]=(co2_sensor_value>>22)&0xff;
     len++; 
     sensor_data[len+2]=(co2_sensor_value>>16)&0xff;
     len++; 

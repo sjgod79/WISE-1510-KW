@@ -276,7 +276,8 @@ float MGRead(void)
         NODE_DEBUG(" V: %f\r\n",v);
         Thread::wait(50);        
     }
-    // v = (v/READ_SAMPLE_TIMES) *5/1024 ;  
+    //v = (v/READ_SAMPLE_TIMES) *5/1024 ;  
+    v = (v/READ_SAMPLE_TIMES) *i ;  
         
     return v;
 }

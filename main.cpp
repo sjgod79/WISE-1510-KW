@@ -21,6 +21,7 @@
 /************************Hardware Related Macros************************************/
 #define         MG_PIN                       (ADC0)     //define which analog input channel you are going to use
 #define         BOOL_PIN                     (2)
+
 #define         DC_GAIN                      (8.5)   //define the DC gain of amplifier
 /***********************Software Related Macros************************************/
 #define         READ_SAMPLE_INTERVAL         (50)    //define how many samples you are going to take in normal operation
@@ -235,11 +236,11 @@ static unsigned int hdc1510_sensor(void)
     /*Temperature*/
     int ss = tempval*100;
     unsigned int yy=0;
-    //printf("Temperature: %.2f C\r\n",tempval );
+    printf("Temperature: %.2f C\r\n",tempval );
     /*Humidity*/
     float hempval = (float)((data_read[2] << 8 | data_read[3]) * 100.0 / 65536.0);   
     yy=hempval*100;
-    // printf("Humidity: %.2f %\r\n",hempval);
+    printf("Humidity: %.2f %\r\n",hempval);
 
     return (yy<<16)|ss; 
 }
@@ -274,7 +275,7 @@ float MGRead(void)
         // delay(READ_SAMPLE_INTERVAL);
         Thread::wait(1000);        
     }
-    v = (v/READ_SAMPLE_TIMES) *5/1024 ;
+    v = (v/READ_SAMPLE_TIMES) *5/1024 ;    
     return v;
 }
 
@@ -300,21 +301,21 @@ static unsigned int co2_sensor_sku_sen0159(void)
 {
     int percentage;
     float volts;
-
+        
     volts = MGRead();
-    NODE_DEBUG( "SEN0159:" );
+    NODE_DEBUG( "SEN0159:  " );
     NODE_DEBUG("%f",volts);
-    NODE_DEBUG( "V           " );
+    NODE_DEBUG( " V           " );
 
     percentage = MGGetPercentage(volts,CO2Curve);
-    NODE_DEBUG("CO2:");
+    NODE_DEBUG("CO2:  ");
     if (percentage == -1) {
         NODE_DEBUG( "<400" );
     } else {
         NODE_DEBUG("%d",percentage);
     }
 
-    NODE_DEBUG( "ppm" );
+    NODE_DEBUG( " ppm " );
     NODE_DEBUG("\n");
 
     return percentage;
@@ -324,7 +325,7 @@ static void node_sensor_sku_thread(void const *args)
 {
     while(1){
         Thread::wait(1000);
-        NODE_DEBUG("HYUNJAE : Thread test \r\n");
+        NODE_DEBUG("\n LoRa CO2 Sensor \r :  ");
         co2_sensor_value = co2_sensor_sku_sen0159(); 
     }
 }
@@ -599,9 +600,9 @@ unsigned char node_get_sensor_data (char *data)
     len++; // CO2
     sensor_data[len+2]=0x2;
     len++;  // len:2 bytes  
-    sensor_data[len+2]=(co2_sensor_value>>20)&0xff;
+    sensor_data[len+2]=(co2_sensor_value)&0xff;
     len++; 
-    sensor_data[len+2]=(co2_sensor_value>>16)&0xff;
+    sensor_data[len+2]=(co2_sensor_value)&0xff;
     len++; 
     #endif
 

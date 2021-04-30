@@ -305,7 +305,7 @@ static unsigned int co2_sensor_sku_sen0159(void)
         
     volts = MGRead();
     NODE_DEBUG( "SEN0159:  " );
-    NODE_DEBUG("%f",volts*1000);
+    NODE_DEBUG("%f",volts*600);
     NODE_DEBUG( " V           " );
 
     percentage = MGGetPercentage(volts,CO2Curve);
@@ -313,7 +313,7 @@ static unsigned int co2_sensor_sku_sen0159(void)
     if (percentage == -1) {
         NODE_DEBUG( "<400" );
     } else {
-        NODE_DEBUG("%d",percentage/1024);
+        NODE_DEBUG("%d",percentage);
     }
 
     NODE_DEBUG( " ppm " );
@@ -601,9 +601,9 @@ unsigned char node_get_sensor_data (char *data)
     len++; // CO2
     sensor_data[len+2]=0x2;
     len++;  // len:2 bytes  
-    sensor_data[len+2]=(co2_sensor_value)&0xff;
+    sensor_data[len+2]=(co2_sensor_value>>3)&0xff;
     len++; 
-    sensor_data[len+2]=(co2_sensor_value)&0xff;
+    sensor_data[len+2]=(co2_sensor_value>>3)&0xff;
     len++; 
     #endif
 

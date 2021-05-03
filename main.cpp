@@ -282,7 +282,7 @@ float MGRead(void)
     NODE_DEBUG( " AIN : %f  V",v);    
     NODE_DEBUG( "      before_Amp : %f  V",v/DC_GAIN);
 
-    v = (v/READ_SAMPLE_TIMES)*14 ;      
+    v = (v/READ_SAMPLE_TIMES)*15 ;      
     NODE_DEBUG( "      AIN_execute : %f  V\r\n",v);    
         
 

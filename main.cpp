@@ -270,6 +270,7 @@ float MGRead(void)
     int i;
     float v=0;
 
+/*
     for (i=0;i<READ_SAMPLE_TIMES;i++) {
         v += ain;
         //delay(READ_SAMPLE_INTERVAL);
@@ -278,7 +279,10 @@ float MGRead(void)
     }
     //v = (v/READ_SAMPLE_TIMES) *5/1024 ;  
     v = (v/READ_SAMPLE_TIMES) *i ;  
-        
+  */      
+    v = (v/READ_SAMPLE_TIMES) *i ;  
+    NODE_DEBUG(" V: %f\r\n",v);
+
     return v;
 }
 

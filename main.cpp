@@ -32,7 +32,7 @@
 
 #define         BOOL_PIN                     (2)
 
-#define         DC_GAIN                      (8.5)   //define the DC gain of amplifier
+#define         DC_GAIN                      (5)   //define the DC gain of amplifier
 /***********************Software Related Macros************************************/
 #define         READ_SAMPLE_INTERVAL         (50)    //define how many samples you are going to take in normal operation
 #define         READ_SAMPLE_TIMES            (5)     //define the time interval(in milisecond) between each samples in
@@ -50,9 +50,6 @@ float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.6
                                                      //slope = ( reaction voltage ) / (log400 –log1000)
 
 AnalogIn ain(MG_PIN);
-AnalogIn ain2(MG2_PIN);
-AnalogIn ain3(MG3_PIN);
-AnalogIn ain4(MG4_PIN);
 
 
 static unsigned int co2_sensor_value = 0;
@@ -299,61 +296,6 @@ float MGRead(void)
 
 
 
-float MGRead2(void)
-{
-    int i;
-    float v=0;
-
-    for (i=0;i<READ_SAMPLE_TIMES;i++) {
-        v += ain2;
-        // delay(READ_SAMPLE_INTERVAL);
-        Thread::wait(1000);
-        NODE_DEBUG( "AI2 V : %f\r\n",v);        
-    }
-    v = v/READ_SAMPLE_TIMES*5 ;
-    NODE_DEBUG( "Vsum : %f\r\n",v);        
-
-    return v;
-}
-
-
-float MGRead3(void)
-{
-    int i;
-    float v=0;
-
-    for (i=0;i<READ_SAMPLE_TIMES;i++) {
-        v += ain3;
-        // delay(READ_SAMPLE_INTERVAL);
-        Thread::wait(1000);
-        NODE_DEBUG( "AI3 V : %f\r\n",v);        
-    }
-    v = v/READ_SAMPLE_TIMES*5 ;
-    NODE_DEBUG( "Vsum : %f\r\n",v);        
-
-    return v;
-}
-
-float MGRead4(void)
-{
-    int i;
-    float v=0;
-
-    for (i=0;i<READ_SAMPLE_TIMES;i++) {
-        v += ain4;
-        // delay(READ_SAMPLE_INTERVAL);
-        Thread::wait(1000);
-        NODE_DEBUG( "AI4 V : %f\r\n",v);        
-    }
-    v = v/READ_SAMPLE_TIMES*5 ;
-    NODE_DEBUG( "Vsum : %f\r\n",v);        
-
-    return v;
-}
-
-
-
-
 
 /*****************************  MQGetPercentage **********************************
 Input:   volts   - SEN-000007 output measured in volts
@@ -382,21 +324,6 @@ static unsigned int co2_sensor_sku_sen0159(void)
     NODE_DEBUG( "SEN0159:  " );
     NODE_DEBUG("%f",volts);
     NODE_DEBUG( " V      " );
-    volts2 = MGRead2();
-    NODE_DEBUG( "SEN0159:  " );
-    NODE_DEBUG("%f",volts);
-    NODE_DEBUG( " V      " );
-
-    volts3 = MGRead3();
-    NODE_DEBUG( "SEN0159:  " );
-    NODE_DEBUG("%f",volts);
-    NODE_DEBUG( " V      " );
-
-    volts4 = MGRead4();
-    NODE_DEBUG( "SEN0159:  " );
-    NODE_DEBUG("%f",volts);
-    NODE_DEBUG( " V      " );
-
 
 
     percentage = MGGetPercentage(volts,CO2Curve);

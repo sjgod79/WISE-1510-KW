@@ -277,11 +277,13 @@ float MGRead(void)
         v += ain;
         // delay(READ_SAMPLE_INTERVAL);
         Thread::wait(1000);
-            
-    }
-    v = (v/READ_SAMPLE_TIMES)*5*1.75 ;      
     NODE_DEBUG( "AIN V : %f",v);    
-    NODE_DEBUG( "   before_Amp V : %f\r\n",v/DC_GAIN);    
+    NODE_DEBUG( "   before_Amp V : %f\r\n",v/DC_GAIN);
+
+    }
+    v = (v/READ_SAMPLE_TIMES)*12.5 ;      
+    NODE_DEBUG( "   AIN_execute V : %f",v);    
+        
 
     return v;
 }

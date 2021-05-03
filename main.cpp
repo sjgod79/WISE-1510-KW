@@ -20,6 +20,16 @@
 #define WISE_VERSION_TEST                  "202104250001"
 /************************Hardware Related Macros************************************/
 #define         MG_PIN                       (ADC0)     //define which analog input channel you are going to use
+
+/***********************************************************************************/
+/*********                modifiedsjgod79                                      *****/
+/***********************************************************************************/
+#define         MG2_PIN                       (ADC2)     //define which analog input channel you are going to use
+#define         MG3_PIN                       (ADC3)     //define which analog input channel you are going to use
+#define         MG4_PIN                       (ADC4)     //define which analog input channel you are going to use
+
+
+
 #define         BOOL_PIN                     (2)
 
 #define         DC_GAIN                      (8.5)   //define the DC gain of amplifier
@@ -40,6 +50,10 @@ float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.6
                                                      //slope = ( reaction voltage ) / (log400 –log1000)
 
 AnalogIn ain(MG_PIN);
+AnalogIn ain2(MG2_PIN);
+AnalogIn ain3(MG3_PIN);
+AnalogIn ain4(MG4_PIN);
+
 
 static unsigned int co2_sensor_value = 0;
 #endif
@@ -274,13 +288,72 @@ float MGRead(void)
         v += ain;
         // delay(READ_SAMPLE_INTERVAL);
         Thread::wait(1000);
-        NODE_DEBUG( "V : %f\r\n",v);        
+        NODE_DEBUG( "AI0 V : %f\r\n",v);        
     }
     v = v/READ_SAMPLE_TIMES*5 ;
     NODE_DEBUG( "Vsum : %f\r\n",v);        
 
     return v;
 }
+
+
+
+
+float MGRead2(void)
+{
+    int i;
+    float v=0;
+
+    for (i=0;i<READ_SAMPLE_TIMES;i++) {
+        v += ain2;
+        // delay(READ_SAMPLE_INTERVAL);
+        Thread::wait(1000);
+        NODE_DEBUG( "AI2 V : %f\r\n",v);        
+    }
+    v = v/READ_SAMPLE_TIMES*5 ;
+    NODE_DEBUG( "Vsum : %f\r\n",v);        
+
+    return v;
+}
+
+
+float MGRead3(void)
+{
+    int i;
+    float v=0;
+
+    for (i=0;i<READ_SAMPLE_TIMES;i++) {
+        v += ain3;
+        // delay(READ_SAMPLE_INTERVAL);
+        Thread::wait(1000);
+        NODE_DEBUG( "AI3 V : %f\r\n",v);        
+    }
+    v = v/READ_SAMPLE_TIMES*5 ;
+    NODE_DEBUG( "Vsum : %f\r\n",v);        
+
+    return v;
+}
+
+float MGRead4(void)
+{
+    int i;
+    float v=0;
+
+    for (i=0;i<READ_SAMPLE_TIMES;i++) {
+        v += ain4;
+        // delay(READ_SAMPLE_INTERVAL);
+        Thread::wait(1000);
+        NODE_DEBUG( "AI4 V : %f\r\n",v);        
+    }
+    v = v/READ_SAMPLE_TIMES*5 ;
+    NODE_DEBUG( "Vsum : %f\r\n",v);        
+
+    return v;
+}
+
+
+
+
 
 /*****************************  MQGetPercentage **********************************
 Input:   volts   - SEN-000007 output measured in volts
@@ -303,12 +376,28 @@ int  MGGetPercentage(float volts, float *pcurve)
 static unsigned int co2_sensor_sku_sen0159(void)
 {
     int percentage;
-    float volts;
+    float volts, volts2, volts3, volts4 ;
         
     volts = MGRead();
     NODE_DEBUG( "SEN0159:  " );
     NODE_DEBUG("%f",volts);
     NODE_DEBUG( " V      " );
+    volts2 = MGRead2();
+    NODE_DEBUG( "SEN0159:  " );
+    NODE_DEBUG("%f",volts);
+    NODE_DEBUG( " V      " );
+
+    volts3 = MGRead3();
+    NODE_DEBUG( "SEN0159:  " );
+    NODE_DEBUG("%f",volts);
+    NODE_DEBUG( " V      " );
+
+    volts4 = MGRead4();
+    NODE_DEBUG( "SEN0159:  " );
+    NODE_DEBUG("%f",volts);
+    NODE_DEBUG( " V      " );
+
+
 
     percentage = MGGetPercentage(volts,CO2Curve);
     NODE_DEBUG("CO2:  ");

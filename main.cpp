@@ -268,6 +268,7 @@ Remarks: This function reads the output of SEN-000007
 float MGRead(void)
 {
     int i;    
+    float v=0;
     float vsum=0;
     
     /*
@@ -280,14 +281,14 @@ float MGRead(void)
     */
 
    for (i=0;i<READ_SAMPLE_TIMES;i++) {
-       v[0] = ain;
+       v = ain;
        NODE_DEBUG(" V: %f\r\n",v);
        Tread::wait(1000);
    }
 
     for (i =-; i<READ_SAMPLE_TIMES;i++) {
-        vsum +- v[0];
-        NODE_DEBUG(" Vsum : %f\r\n",vsum);
+        vsum +- v ;
+        NODE_DEBUG("Vsum : %f\r\n",vsum);
     }
 
     //v = (v/READ_SAMPLE_TIMES) *5/1024 ;  

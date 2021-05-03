@@ -308,7 +308,7 @@ static unsigned int co2_sensor_sku_sen0159(void)
     volts = MGRead();
     NODE_DEBUG( "SEN0159:  " );
     NODE_DEBUG("%f",volts);
-    NODE_DEBUG( " V           " );
+    NODE_DEBUG( " V      " );
 
     percentage = MGGetPercentage(volts,CO2Curve);
     NODE_DEBUG("CO2:  ");

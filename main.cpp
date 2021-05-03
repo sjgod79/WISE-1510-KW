@@ -21,18 +21,10 @@
 /************************Hardware Related Macros************************************/
 #define         MG_PIN                       (ADC0)     //define which analog input channel you are going to use
 
-/***********************************************************************************/
-/*********                modifiedsjgod79                                      *****/
-/***********************************************************************************/
-#define         MG2_PIN                       (ADC2)     //define which analog input channel you are going to use
-#define         MG3_PIN                       (ADC3)     //define which analog input channel you are going to use
-#define         MG4_PIN                       (ADC4)     //define which analog input channel you are going to use
-
-
 
 #define         BOOL_PIN                     (2)
 
-#define         DC_GAIN                      (5)   //define the DC gain of amplifier
+#define         DC_GAIN                      (8.5)   //define the DC gain of amplifier
 /***********************Software Related Macros************************************/
 #define         READ_SAMPLE_INTERVAL         (50)    //define how many samples you are going to take in normal operation
 #define         READ_SAMPLE_TIMES            (5)     //define the time interval(in milisecond) between each samples in
@@ -287,9 +279,9 @@ float MGRead(void)
         Thread::wait(1000);
             
     }
-    v = (v/READ_SAMPLE_TIMES)*5 ;      
-    NODE_DEBUG( "AI0 V : %f\r\n",v);    
-    NODE_DEBUG( "AI0 V : %f\r\n",v/DC_GAIN);    
+    v = (v/READ_SAMPLE_TIMES)*5*1.75 ;      
+    NODE_DEBUG( "AIN V : %f",v);    
+    NODE_DEBUG( "   before_Amp V : %f\r\n",v/DC_GAIN);    
 
     return v;
 }

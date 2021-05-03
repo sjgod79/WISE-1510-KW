@@ -276,12 +276,13 @@ float MGRead(void)
     for (i=0;i<READ_SAMPLE_TIMES;i++) {
         v += ain;
         // delay(READ_SAMPLE_INTERVAL);
-        Thread::wait(1000);
-    NODE_DEBUG( "AIN V : %f",v);    
+        Thread::wait(1000);      
+    }
+
+    NODE_DEBUG( "ain V : %f",v);    
     NODE_DEBUG( "   before_Amp V : %f\r\n",v/DC_GAIN);
 
-    }
-    v = (v/READ_SAMPLE_TIMES)*12.5 ;      
+    v = (v/READ_SAMPLE_TIMES)*13.8 ;      
     NODE_DEBUG( "   AIN_execute V : %f",v);    
         
 
@@ -339,7 +340,7 @@ static void node_sensor_sku_thread(void const *args)
 {
     while(1){
         Thread::wait(1000);
-        NODE_DEBUG("\n LoRa CO2 Sensor :  \r");
+        NODE_DEBUG("\r\n LoRa CO2 Sensor :  \r\n");
         co2_sensor_value = co2_sensor_sku_sen0159(); 
     }
 }

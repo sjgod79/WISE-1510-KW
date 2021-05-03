@@ -279,11 +279,11 @@ float MGRead(void)
         Thread::wait(1000);      
     }
 
-    NODE_DEBUG( "ain V : %f",v);    
-    NODE_DEBUG( "   before_Amp V : %f\r\n",v/DC_GAIN);
+    NODE_DEBUG( " AIN : %f  V",v);    
+    NODE_DEBUG( "      before_Amp : %f  V",v/DC_GAIN);
 
-    v = (v/READ_SAMPLE_TIMES)*13.8 ;      
-    NODE_DEBUG( "   AIN_execute V : %f",v);    
+    v = (v/READ_SAMPLE_TIMES)*14 ;      
+    NODE_DEBUG( "      AIN_execute : %f  V\r\n",v);    
         
 
     return v;
@@ -317,13 +317,13 @@ static unsigned int co2_sensor_sku_sen0159(void)
     float volts, volts2, volts3, volts4 ;
         
     volts = MGRead();
-    NODE_DEBUG( "SEN0159:  " );
+    NODE_DEBUG( " SEN0159 :  " );
     NODE_DEBUG("%f",volts);
     NODE_DEBUG( " V      " );
 
 
     percentage = MGGetPercentage(volts,CO2Curve);
-    NODE_DEBUG("CO2:  ");
+    NODE_DEBUG("CO2 :  ");
     if (percentage == -1) {
         NODE_DEBUG( "<400" );
     } else {

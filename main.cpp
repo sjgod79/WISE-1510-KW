@@ -28,8 +28,7 @@
                                                      //normal operation
 /**********************Application Related Macros**********************************/
 //These two values differ from sensor to sensor. user should derermine this value.
-//#define         ZERO_POINT_VOLTAGE           (0.324) //define the output of the sensor in volts when the concentration of CO2 is 400PPM
-#define         ZERO_POINT_VOLTAGE           (0.277)
+#define         ZERO_POINT_VOLTAGE           (0.324) //define the output of the sensor in volts when the concentration of CO2 is 400PPM
 #define         REACTION_VOLTGAE             (0.020) //define the voltage drop of the sensor when move the sensor from air into 1000ppm CO2
 /*****************************Globals***********************************************/
 float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.602-3))};
@@ -39,7 +38,7 @@ float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.6
                                                      //data format:{ x, y, slope}; point1: (lg400, 0.324), point2: (lg4000, 0.280)
                                                      //slope = ( reaction voltage ) / (log400 –log1000)
 
-//AnalogIn ain(MG_PIN);
+AnalogIn ain(MG_PIN);
 
 
 static unsigned int co2_sensor_value = 0;
@@ -267,28 +266,27 @@ Output:  output of SEN-000007
 Remarks: This function reads the output of SEN-000007
 ************************************************************************************/
 //float MGRead(void)
-float MGRead(int mg_pin)
 {
     int i;
     float v=0;
 
     for (i=0;i<READ_SAMPLE_TIMES;i++) {
-        v += analogRead(mg_pin);
+        v += ain;
         // delay(READ_SAMPLE_INTERVAL);
-        Thread::wait(1000);      
+        Thread::wait(1000);
+        NODE_DEBUG("Analog Read : ");
+        NODE_DEBUG("%f", v);
+        NODE_DEBUG("  V");      
     }
 
-    NODE_DEBUG( " AIN : %f  V",v);    
-    NODE_DEBUG( "      before_Amp : %f  V",v/DC_GAIN);
-
     v = (v/READ_SAMPLE_TIMES)*5/1024 ;      
-    NODE_DEBUG( "      AIN_execute : %f  V\r\n",v);    
+    NODE_DEBUG("SEN0159 : ");
+    NODE_DEBUG("%f", v);
+    NODE_DEBUG("  V    ");
         
 
     return v;
 }
-
-
 
 
 
@@ -303,7 +301,7 @@ Remarks: By using the slope and a point of the line. The x(logarithmic value of 
 ************************************************************************************/
 int  MGGetPercentage(float volts, float *pcurve)
 {
-   if ((volts/DC_GAIN )>=ZERO_POINT_VOLTAGE) {
+   if ((volts/DC_GAIN)>=ZERO_POINT_VOLTAGE) {
       return -1;
    } else {
       return pow(10, ((volts/DC_GAIN)-pcurve[1])/pcurve[2]+pcurve[0]);
@@ -313,9 +311,9 @@ int  MGGetPercentage(float volts, float *pcurve)
 static unsigned int co2_sensor_sku_sen0159(void)
 {
     int percentage;
-    float volts, volts2, volts3, volts4 ;
+    float volts;
         
-    volts = MGRead(MG_PIN);
+    volts = MGRead();
     NODE_DEBUG( " SEN0159 :  " );
     NODE_DEBUG("%f",volts);
     NODE_DEBUG( " V      " );

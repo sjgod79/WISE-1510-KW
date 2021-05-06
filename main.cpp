@@ -20,10 +20,7 @@
 #define WISE_VERSION_TEST                  "202104250001"
 /************************Hardware Related Macros************************************/
 #define         MG_PIN                       (ADC0)     //define which analog input channel you are going to use
-
-
 #define         BOOL_PIN                     (2)
-
 #define         DC_GAIN                      (8.5)   //define the DC gain of amplifier
 /***********************Software Related Macros************************************/
 #define         READ_SAMPLE_INTERVAL         (50)    //define how many samples you are going to take in normal operation
@@ -31,7 +28,8 @@
                                                      //normal operation
 /**********************Application Related Macros**********************************/
 //These two values differ from sensor to sensor. user should derermine this value.
-#define         ZERO_POINT_VOLTAGE           (0.324) //define the output of the sensor in volts when the concentration of CO2 is 400PPM
+//#define         ZERO_POINT_VOLTAGE           (0.324) //define the output of the sensor in volts when the concentration of CO2 is 400PPM
+#define         ZERO_POINT_VOLTAGE           (0.277)
 #define         REACTION_VOLTGAE             (0.020) //define the voltage drop of the sensor when move the sensor from air into 1000ppm CO2
 /*****************************Globals***********************************************/
 float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.602-3))};
@@ -268,7 +266,8 @@ Input:   mg_pin - analog channel
 Output:  output of SEN-000007
 Remarks: This function reads the output of SEN-000007
 ************************************************************************************/
-float MGRead(void)
+//float MGRead(void)
+float MGRead(int ain)
 {
     int i;
     float v=0;
@@ -282,7 +281,7 @@ float MGRead(void)
     NODE_DEBUG( " AIN : %f  V",v);    
     NODE_DEBUG( "      before_Amp : %f  V",v/DC_GAIN);
 
-    v = (v/READ_SAMPLE_TIMES)*15 ;      
+    v = (v/READ_SAMPLE_TIMES)*5/1024 ;      
     NODE_DEBUG( "      AIN_execute : %f  V\r\n",v);    
         
 
@@ -615,9 +614,9 @@ unsigned char node_get_sensor_data (char *data)
     len++; // CO2
     sensor_data[len+2]=0x2;
     len++;  // len:2 bytes  
-    sensor_data[len+2]=(co2_sensor_value>>3)&0xff;
+    sensor_data[len+2]=co2_sensor_value&0xff;
     len++; 
-    sensor_data[len+2]=(co2_sensor_value>>3)&0xff;
+    sensor_data[len+2]=co2_sensor_value&0xff;
     len++; 
     #endif
 

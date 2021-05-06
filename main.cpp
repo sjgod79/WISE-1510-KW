@@ -270,7 +270,7 @@ float MGRead(void)
     float v=0;
 
     for (i=0;i<READ_SAMPLE_TIMES;i++) {
-        v += ain*65535;
+        v += ain;
         // delay(READ_SAMPLE_INTERVAL);
         Thread::wait(1000);
         NODE_DEBUG("Analog Read : ");
@@ -278,7 +278,8 @@ float MGRead(void)
         NODE_DEBUG("  V    ");
 
     }
-    v = (v/READ_SAMPLE_TIMES) *5/1024 ;
+    //v = (v/READ_SAMPLE_TIMES) *5/1024 ;
+    v = (v/READ_SAMPLE_TIMES) *5/65536 ;
         NODE_DEBUG("SEN0159 : ");
         NODE_DEBUG("%f", v);
         NODE_DEBUG("  V    ");

@@ -28,8 +28,8 @@
                                                      //normal operation
 /**********************Application Related Macros**********************************/
 //These two values differ from sensor to sensor. user should derermine this value.
-#define         ZERO_POINT_VOLTAGE           (0.324) //define the output of the sensor in volts when the concentration of CO2 is 400PPM
-#define         REACTION_VOLTGAE             (0.020) //define the voltage drop of the sensor when move the sensor from air into 1000ppm CO2
+#define         ZERO_POINT_VOLTAGE           (0.220) //define the output of the sensor in volts when the concentration of CO2 is 400PPM
+#define         REACTION_VOLTGAE             (0.030) //define the voltage drop of the sensor when move the sensor from air into 1000ppm CO2
 /*****************************Globals***********************************************/
 float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.602-3))};
                                                      //two points are taken from the curve.
@@ -39,7 +39,6 @@ float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.6
                                                      //slope = ( reaction voltage ) / (log400 –log1000)
 
 AnalogIn ain(MG_PIN);
-
 
 static unsigned int co2_sensor_value = 0;
 #endif
@@ -236,11 +235,11 @@ static unsigned int hdc1510_sensor(void)
     /*Temperature*/
     int ss = tempval*100;
     unsigned int yy=0;
-    printf("Temperature: %.2f C\r\n",tempval );
+    //printf("Temperature: %.2f C\r\n",tempval );
     /*Humidity*/
     float hempval = (float)((data_read[2] << 8 | data_read[3]) * 100.0 / 65536.0);   
     yy=hempval*100;
-    printf("Humidity: %.2f %\r\n",hempval);
+    // printf("Humidity: %.2f %\r\n",hempval);
 
     return (yy<<16)|ss; 
 }
@@ -265,7 +264,7 @@ Input:   mg_pin - analog channel
 Output:  output of SEN-000007
 Remarks: This function reads the output of SEN-000007
 ************************************************************************************/
-//float MGRead(void)
+float MGRead(void)
 {
     int i;
     float v=0;
@@ -276,19 +275,16 @@ Remarks: This function reads the output of SEN-000007
         Thread::wait(1000);
         NODE_DEBUG("Analog Read : ");
         NODE_DEBUG("%f", v);
-        NODE_DEBUG("  V");      
-    }
+        NODE_DEBUG("  V    ");
 
-    v = (v/READ_SAMPLE_TIMES)*5/1024 ;      
-    NODE_DEBUG("SEN0159 : ");
-    NODE_DEBUG("%f", v);
-    NODE_DEBUG("  V    ");
-        
+    }
+    v = (v/READ_SAMPLE_TIMES) *5/1024 ;
+        NODE_DEBUG("SEN0159 : ");
+        NODE_DEBUG("%f", v);
+        NODE_DEBUG("  V    ");
 
     return v;
 }
-
-
 
 /*****************************  MQGetPercentage **********************************
 Input:   volts   - SEN-000007 output measured in volts
@@ -301,7 +297,7 @@ Remarks: By using the slope and a point of the line. The x(logarithmic value of 
 ************************************************************************************/
 int  MGGetPercentage(float volts, float *pcurve)
 {
-   if ((volts/DC_GAIN)>=ZERO_POINT_VOLTAGE) {
+   if ((volts/DC_GAIN )>=ZERO_POINT_VOLTAGE) {
       return -1;
    } else {
       return pow(10, ((volts/DC_GAIN)-pcurve[1])/pcurve[2]+pcurve[0]);
@@ -312,23 +308,22 @@ static unsigned int co2_sensor_sku_sen0159(void)
 {
     int percentage;
     float volts;
-        
-    volts = MGRead();
-    NODE_DEBUG( " SEN0159 :  " );
-    NODE_DEBUG("%f",volts);
-    NODE_DEBUG( " V      " );
 
+    volts = MGRead();
+    NODE_DEBUG("SEN0159:");
+    NODE_DEBUG("%f",volts);
+    NODE_DEBUG("V           ");
 
     percentage = MGGetPercentage(volts,CO2Curve);
-    NODE_DEBUG("CO2 :  ");
+    NODE_DEBUG("CO2:");
     if (percentage == -1) {
-        NODE_DEBUG( "<400" );
+        NODE_DEBUG("<400");
     } else {
         NODE_DEBUG("%d",percentage);
     }
 
-    NODE_DEBUG( " ppm " );
-    NODE_DEBUG("\n");
+    NODE_DEBUG("ppm" );
+    NODE_DEBUG("\n\r");
 
     return percentage;
 }
@@ -337,7 +332,7 @@ static void node_sensor_sku_thread(void const *args)
 {
     while(1){
         Thread::wait(1000);
-        NODE_DEBUG("\r\n LoRa CO2 Sensor :  \r\n");
+        NODE_DEBUG("HYUNJAE : Thread test \r\n");
         co2_sensor_value = co2_sensor_sku_sen0159(); 
     }
 }
@@ -606,30 +601,16 @@ unsigned char node_get_sensor_data (char *data)
     len++;
     #endif
     
-
     #if HYUNJAE
     sensor_data[len+2]=0x3;
     len++; // CO2
     sensor_data[len+2]=0x2;
-    len++;  // len:2 bytes  
-    sensor_data[len+2]=co2_sensor_value&0xff;
-    len++; 
-    sensor_data[len+2]=co2_sensor_value&0xff;
-    len++; 
-    #endif
-
-/*
-    #if HYUNJAE
-    sensor_data[len+2]=0x3;
-    len++; // CO2
-    sensor_data[len+2]=0x3;
     len++;  // len:2 bytes  
     sensor_data[len+2]=(co2_sensor_value>>24)&0xff;
     len++; 
     sensor_data[len+2]=(co2_sensor_value>>16)&0xff;
     len++; 
     #endif
-*/
 
     #if NODE_SENSOR_CO2_VOC_ENABLE
     sensor_data[len+2]=0x3;
@@ -722,8 +703,8 @@ void node_state_loop()
                 {
                     time_t seconds = time(NULL);
             
-                    NODE_DEBUG("Time as seconds since January 1, 1970 = %d\r\n", seconds);
-                    NODE_DEBUG("Time as a basic string = %s\r\n", ctime(&seconds));
+                    NODE_DEBUG("Time as seconds since January 1, 1970 = %d\n", seconds);
+                    NODE_DEBUG("Time as a basic string = %s", ctime(&seconds));
                     
                 }
      
@@ -983,7 +964,3 @@ int main ()
     return 0;
 }
     
-
-
-
-

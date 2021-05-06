@@ -39,7 +39,7 @@ float           CO2Curve[3]  =  {2.602,ZERO_POINT_VOLTAGE,(REACTION_VOLTGAE/(2.6
                                                      //data format:{ x, y, slope}; point1: (lg400, 0.324), point2: (lg4000, 0.280)
                                                      //slope = ( reaction voltage ) / (log400 –log1000)
 
-AnalogIn ain(MG_PIN);
+//AnalogIn ain(MG_PIN);
 
 
 static unsigned int co2_sensor_value = 0;
@@ -267,13 +267,13 @@ Output:  output of SEN-000007
 Remarks: This function reads the output of SEN-000007
 ************************************************************************************/
 //float MGRead(void)
-float MGRead(int ain)
+float MGRead(int mg_pin)
 {
     int i;
     float v=0;
 
     for (i=0;i<READ_SAMPLE_TIMES;i++) {
-        v += ain;
+        v += analogRead(mg_pin);
         // delay(READ_SAMPLE_INTERVAL);
         Thread::wait(1000);      
     }
@@ -315,7 +315,7 @@ static unsigned int co2_sensor_sku_sen0159(void)
     int percentage;
     float volts, volts2, volts3, volts4 ;
         
-    volts = MGRead();
+    volts = MGRead(MG_PIN);
     NODE_DEBUG( " SEN0159 :  " );
     NODE_DEBUG("%f",volts);
     NODE_DEBUG( " V      " );

@@ -279,7 +279,7 @@ float MGRead(void)
 
     }
     //v = (v/READ_SAMPLE_TIMES) *5/1024 ;
-    v = (v/READ_SAMPLE_TIMES) *5/65536 ;
+    v = (v/READ_SAMPLE_TIMES) *5 ;
         NODE_DEBUG("SEN0159 : ");
         NODE_DEBUG("%f", v);
         NODE_DEBUG("  V    ");

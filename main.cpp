@@ -272,12 +272,18 @@ float MGRead(void)
     for (i=0;i<READ_SAMPLE_TIMES;i++) {
         v += ain;
         // delay(READ_SAMPLE_INTERVAL);
-        Thread::wait(1000);        
+        Thread::wait(1000);
+        NODE_DEBUG("Analog Read : ");
+        NODE_DEBUG("%f", v);
+        NODE_DEBUG("  V    ");
+
     }
-      v = (v/READ_SAMPLE_TIMES) *3.42 ;
-      NODE_DEBUG("SEN0159 : ");
-      NODE_DEBUG("%f", v);
-      NODE_DEBUG("  V    ");
+    //v = (v/READ_SAMPLE_TIMES) *5/1024 ;
+    v = (v/READ_SAMPLE_TIMES) *3.42 ;
+        NODE_DEBUG("SEN0159 : ");
+        NODE_DEBUG("%f", v);
+        NODE_DEBUG("  V    ");
+
     return v;
 }
 
@@ -305,20 +311,20 @@ static unsigned int co2_sensor_sku_sen0159(void)
     float volts;
 
     volts = MGRead();
-    NODE_DEBUG( "SEN0159:" );
+    NODE_DEBUG("SEN0159:");
     NODE_DEBUG("%f",volts);
-    NODE_DEBUG( "V           " );
+    NODE_DEBUG("V           ");
 
     percentage = MGGetPercentage(volts,CO2Curve);
     NODE_DEBUG("CO2:");
     if (percentage == -1) {
-        NODE_DEBUG( "<400" );
+        NODE_DEBUG("<400");
     } else {
         NODE_DEBUG("%d",percentage);
     }
 
-    NODE_DEBUG( "ppm" );
-    NODE_DEBUG("\n");
+    NODE_DEBUG("ppm" );
+    NODE_DEBUG("\n\r");
 
     return percentage;
 }
@@ -600,11 +606,19 @@ unsigned char node_get_sensor_data (char *data)
     sensor_data[len+2]=0x3;
     len++; // CO2
     sensor_data[len+2]=0x2;
-    len++;  // len:2 bytes  
+    len++;  // len:2 bytes      
+    /*
     sensor_data[len+2]=(co2_sensor_value>>24)&0xff;
     len++; 
     sensor_data[len+2]=(co2_sensor_value>>16)&0xff;
     len++; 
+    */    
+    sensor_data[len+2]=(co2_sensor_value>>16)&0xff;
+    len++; 
+    sensor_data[len+2]=(co2_sensor_value>>8)&0xff;
+    len++; 
+    
+
     #endif
 
     #if NODE_SENSOR_CO2_VOC_ENABLE
@@ -958,3 +972,4 @@ int main ()
     /*Never reach here*/    
     return 0;
 }
+    
